@@ -147,7 +147,7 @@ class UploadAction extends Action {
     {
         $fullname = $this->uploadBasePath;
         $rootPath = $_SERVER['DOCUMENT_ROOT'];
-        return $rootPath . $fullname;
+        return $rootPath .'/'. $fullname;
     }
 
     public function run() {
