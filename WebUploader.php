@@ -16,7 +16,7 @@ class WebUploader extends \yii\base\Widget
 	public $options = array();
 
 	public function init()
-	{
+	{	
 		parent::init();
 		if (empty($this->url)) $this->url = Url::to(['/index/upload']);
 		if (empty($this->id)) $this->id = 'filePicker';
@@ -41,6 +41,9 @@ class WebUploader extends \yii\base\Widget
 					server: '$this->url',
 					pick: '#$this->id',
 					resize: true
+					});
+					uploader.on('uploadSuccess', function (file) {
+						endUploader(file);
 					});
 EOT;
 		$this->view->registerJs($script, View::POS_READY);

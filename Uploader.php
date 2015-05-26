@@ -44,7 +44,7 @@ class Uploader
      * @param string $type 是否解析base64编码，可省略。若开启，则$fileField代表的是base64编码的字符串表单名
      */
     public function __construct($fileField, $config, $type = "upload")
-    {
+    {   
         $this->fileField = $fileField;
         $this->config = $config;
         $this->type = $type;
