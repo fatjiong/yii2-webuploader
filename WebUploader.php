@@ -13,14 +13,21 @@ class WebUploader extends \yii\base\Widget
 	public $id = 'filePicker';
 	public $url = '';
 	public $template =  '';
-	public $options = array();
+	public $options = [];
+	public $jsOptions = [];
+	public $thumb = [];
 
 	public function init()
 	{	
 		parent::init();
 		if (empty($this->url)) $this->url = Url::to(['/index/upload']);
 		if (empty($this->id)) $this->id = 'filePicker';
-       	if (empty($this->template)) $this->template = '<div id="uploader-demo"><!--用来存放item--><div id="fileList" class="uploader-list"></div><div id="'.$this->id.'">选择图片</div></div>';
+       	if (empty($this->template)) $this->template = '<div id="'.$this->id.'">选择图片</div>';
+
+   		$this->jsOptions['auto'] = 'true';
+   		$this->jsOptions['swf'] = "'./asset/js/Uploader.swf'";
+   		$this->jsOptions['server'] = "'$this->url'";
+   		$this->jsOptions['pick'] = "'#$this->id'";
 	}
 
     public function run()
@@ -29,23 +36,25 @@ class WebUploader extends \yii\base\Widget
     	return $this->template;	
 	}
 
-
 	// 注册组件
 	private function registerClientScript()
 	{
 		WebUploaderAsset::register($this->view);
-		$script = <<<EOT
-				var uploader = WebUploader.create({
-					auto: true,
-					swf: './asset/js/Uploader.swf',
-					server: '$this->url',
-					pick: '#$this->id',
-					resize: true
-					});
-					uploader.on('uploadSuccess', function (file) {
-						endUploader(file);
-					});
-EOT;
+		$script = "var uploader = WebUploader.create({";
+		foreach ($this->jsOptions as $key => $value) {
+			$script .= "$key : $value,";
+		}
+		$script .= "});";
+		if ($this->thumb) {
+			$script .= "uploader.on( 'fileQueued', function( file ) {
+						uploader.makeThumb( file, function( error, ret ) {
+								endThumb(ret); // 生成缩略图后执行方法
+						},".$this->thumb['width'].",".$this->thumb['height'].");
+				 	});";
+		}
+		$script .= "uploader.on('uploadSuccess', function (file) {
+						endUploader(file);   // 上传完成后执行方法
+					});";
 		$this->view->registerJs($script, View::POS_READY);
 	}
 }
