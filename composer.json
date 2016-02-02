@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "fatjiong\\webuploader\\": ""
+            "fatjiong\\yii2-webuploader\\": ""
         }
     }
 }
