@@ -3,12 +3,14 @@
 namespace fatjiong\webuploader;
 
 use Yii;
+use yii\widgets\InputWidget;
 use yii\web\View;
 use yii\helpers\Url;
+use yii\helpers\Html;
 /**
  * This is just an example.
  */
-class WebUploader extends \yii\base\Widget
+class WebUploader extends InputWidget
 {	
 	public $id = 'filePicker';
 	public $url = '';
@@ -20,9 +22,10 @@ class WebUploader extends \yii\base\Widget
 	public $status = [];// 允许状态回调
 
 	public function init()
-	{	
-		parent::init();
-		if (empty($this->url)) $this->url = Url::to(['/index/upload']);
+	{	if(empty($this->name)){
+            $this->name=$this->hasModel() ? Html::getInputName($this->model, $this->attribute): $this->id;
+        }
+		if (empty($this->url)) $this->url = Url::to(['index/upload']);
 		if (empty($this->id)) $this->id = 'filePicker';
        	if (empty($this->template)) $this->template = '<div id="'.$this->id.'">选择图片</div>';
 
@@ -30,14 +33,15 @@ class WebUploader extends \yii\base\Widget
    		$this->jsOptions['swf'] = "'./asset/js/Uploader.swf'";
    		$this->jsOptions['server'] = "'$this->url'";
    		$this->jsOptions['pick'] = "{id:'#$this->id',multiple:false}";
-   		$this->jsOptions['accept'] = "{
-										        title: 'Images',
-										        extensions: 'png,jpg,gif,doc,docx,xls,xlsx,pdf,txt',
-										        mimeTypes: 'application/zip,application/vnd.ms-excel,application/vnd.ms-powerpoint,image/*' +
-										            ',application/vnd.openxmlformats-officedocument.presentationml.presentation' +
-										            ',application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword' +
-										            ',application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,application/x-rar-compressed'}";
-		}
+   		// $this->jsOptions['accept'] = "{
+					// 					        title: 'Images',
+					// 					        extensions: 'png,jpg,gif,doc,docx,xls,xlsx,pdf,txt',
+					// 					        mimeTypes: 'application/zip,application/vnd.ms-excel,application/vnd.ms-powerpoint,image/*' +
+					// 					            ',application/vnd.openxmlformats-officedocument.presentationml.presentation' +
+					// 					            ',application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword' +
+					// 					            ',application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,application/x-rar-compressed'}";
+		parent::init();
+	}
 
     public function run()
     {
