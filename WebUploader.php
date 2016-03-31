@@ -29,7 +29,7 @@ class WebUploader extends InputWidget
 		if (empty($this->id)) $this->id = 'filePicker';
        	if (empty($this->template)) $this->template = '<div id="'.$this->id.'">选择图片</div>';
 
-   		$this->jsOptions['auto'] = 'true';
+   		$this->jsOptions['auto'] = isset($this->jsOptions['auto']) ? $this->jsOptions['auto'] : 'true';
    		$this->jsOptions['swf'] = "'./asset/js/Uploader.swf'";
    		$this->jsOptions['server'] = "'$this->url'";
    		$this->jsOptions['pick'] = "{id:'#$this->id',multiple:false}";
