@@ -21,12 +21,14 @@ class WebUploader extends InputWidget
     public $accept      = []; // 允许的文件
     public $status      = []; // 允许状态回调
     public $endCallback = 'endUploader';
-
+    public $pickText    = '选择图片';
+    public $useHidden   = false;
     public function init()
     {
         if (empty($this->name)) {
             $this->name = $this->hasModel() ? Html::getInputName($this->model, $this->attribute) : $this->id;
         }
+
         if (empty($this->url)) {
             $this->url = Url::to(['index/upload']);
         }
@@ -36,7 +38,12 @@ class WebUploader extends InputWidget
         }
 
         if (empty($this->template)) {
-            $this->template = '<div id="' . $this->id . '">选择图片</div>';
+            $this->template = '<div id="' . $this->id . '">' . $this->pickText . '</div>';
+        }
+
+        if ($this->useHidden) {
+            $id = $this->hasModel() ? Html::getInputId($this->model, $this->attribute) : $this->id;
+            $this->template .= '<input type="text" id="' . $id . '" name="' . $this->name . '" style="display:none" class="col-sm-12" />';
         }
 
         $this->jsOptions['auto']   = isset($this->jsOptions['auto']) ? $this->jsOptions['auto'] : 'true';
